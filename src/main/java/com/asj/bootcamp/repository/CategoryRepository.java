@@ -1,6 +1,6 @@
 package com.asj.bootcamp.repository;
 
-import com.asj.bootcamp.entity.Category;
+import com.asj.bootcamp.model.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -9,5 +9,7 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     Optional<Category> findByNombreCategoria(String nombreCategoria);
+
+    boolean existsByNombreCategoria(String nombreCategoria);
 
 }

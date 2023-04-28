@@ -1,66 +1,54 @@
 package com.asj.bootcamp.service.impl;
 
-import com.asj.bootcamp.entity.Category;
 import com.asj.bootcamp.exception.NotFoundException;
+import com.asj.bootcamp.model.entity.Category;
+import com.asj.bootcamp.model.request.CategoryRequest;
+import com.asj.bootcamp.model.response.CategoryResponse;
 import com.asj.bootcamp.repository.CategoryRepository;
 import com.asj.bootcamp.service.CategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository repository;
 
-    public CategoryServiceImpl(CategoryRepository repository) {
-        this.repository = repository;
+    @Override
+    public CategoryResponse createCategory(CategoryRequest categoryRequest) throws RuntimeException{
+        //modificar excepcion
+        if (repository.existsByNombreCategoria(categoryRequest.getNombreCategoria()))
+            throw new RuntimeException(String.format("Categoria %s nombre ya registrado", categoryRequest.getNombreCategoria()));
+
+        return CategoryResponse.toResponse(repository.save(CategoryRequest.toEntity(categoryRequest)));
     }
 
     @Override
-    public Category createCategory(Category category) {
-        if (existCategory(category.getNombreCategoria())) {
-            throw new RuntimeException(String.format("Categoria %s nombre ya registrado", category.getNombreCategoria()));
-        }
-        return repository.save(category);
+    public CategoryResponse getCategory(Integer id) throws NotFoundException{
+        return CategoryResponse.toResponse(repository.findById(id).orElseThrow(()
+                                                                -> new NotFoundException("Categoria no encontrada")));
     }
 
     @Override
-    public Category getCategory(Integer id){
-        Optional<Category> optionalCategory = repository.findById(id);
-        if (optionalCategory.isPresent()) {
-            return optionalCategory.get();
-        }
-        else {
-            throw new RuntimeException("Categoria con id " + id + " no existe");
-        }
-    }
+    public CategoryResponse updateCategory(Integer id, CategoryRequest tmp) {
 
-    @Override
-    public Category updateCategory(Integer id, Category tmp) {
-        Category categoryUpdated;
-        Optional<Category> optionalCategory = repository.findById(id);
-        if (optionalCategory.isPresent()){
-            categoryUpdated = optionalCategory.get();
-        }
-        else {
-            throw new RuntimeException("Categoria con id " + id + " no existe");
-        }
-        categoryUpdated.setNombreCategoria(tmp.getNombreCategoria());
+        Category categoryToUpdate = repository.findById(id).orElseThrow(()
+                                                                -> new NotFoundException("Categoria no encontrada"));
+        //falta excepcion si ya existe la categoria con ese nombre
 
-        return repository.save(categoryUpdated);
+        categoryToUpdate.setNombreCategoria(tmp.getNombreCategoria());
+
+        return CategoryResponse.toResponse(repository.save(categoryToUpdate));
     }
 
     @Override
     public void deleteCategory(Integer id) {
-        Optional<Category> optionalCategory = repository.findById(id);
-        if (optionalCategory.isPresent()) {
-            repository.deleteById(id);
-        }
-        else {
-            throw new RuntimeException("Categoria con id " + id + " no existe");
-        }
+        repository.findById(id).orElseThrow(() -> new NotFoundException("Categoria no encontrada"));
+        repository.deleteById(id);
     }
 
     @Override
@@ -69,8 +57,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllCategories() {
-        return repository.findAll();
+    public List<CategoryResponse> getAllCategories() {
+        List<Category> categoriesEntities = repository.findAll();
+        List<CategoryResponse> categoryResponses = new ArrayList<>();
+        categoriesEntities.forEach((category) -> {
+            categoryResponses.add(CategoryResponse.toResponse(category));
+        });
+        return categoryResponses;
     }
 
 }

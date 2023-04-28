@@ -2,6 +2,7 @@ package com.asj.bootcamp.datos;
 
 import com.asj.bootcamp.dto.*;
 import com.asj.bootcamp.entity.*;
+import com.asj.bootcamp.model.entity.Category;
 
 import java.time.LocalDate;
 

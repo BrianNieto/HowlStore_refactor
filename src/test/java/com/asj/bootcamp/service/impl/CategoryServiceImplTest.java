@@ -1,7 +1,7 @@
 package com.asj.bootcamp.service.impl;
 
 import com.asj.bootcamp.datos.DatosDummy;
-import com.asj.bootcamp.entity.Category;
+import com.asj.bootcamp.model.entity.Category;
 import com.asj.bootcamp.repository.CategoryRepository;
 import com.asj.bootcamp.service.CategoryService;
 import org.junit.jupiter.api.DisplayName;

@@ -1,7 +1,7 @@
 package com.asj.bootcamp.repository;
 
 import com.asj.bootcamp.datos.DatosDummy;
-import com.asj.bootcamp.entity.Category;
+import com.asj.bootcamp.model.entity.Category;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,20 +1,23 @@
 package com.asj.bootcamp.service;
 
-import com.asj.bootcamp.entity.Category;
+import com.asj.bootcamp.exception.NotFoundException;
+import com.asj.bootcamp.model.entity.Category;
+import com.asj.bootcamp.model.request.CategoryRequest;
+import com.asj.bootcamp.model.response.CategoryResponse;
 
 import java.util.List;
 
 public interface CategoryService {
 
-    Category createCategory(Category category);
+    CategoryResponse createCategory(CategoryRequest categoryRequest) throws RuntimeException;
 
-    Category getCategory(Integer id);
+    CategoryResponse getCategory(Integer id) throws NotFoundException;
 
-    Category updateCategory(Integer id, Category tmp);
+    CategoryResponse updateCategory(Integer id, CategoryRequest categoryRequest);
 
     void deleteCategory(Integer id);
 
     boolean existCategory(String nombreCategory);
 
-    List<Category> getAllCategories();
+    List<CategoryResponse> getAllCategories();
 }
